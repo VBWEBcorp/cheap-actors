@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getFilms, getShorts } from "@/lib/catalog";
 import { HomeBrowse } from "./home-browse";
 import { TickerLine } from "@/components/ticker-line";
+import { ConceptHero } from "@/components/concept-hero";
 
 export default function HomePage() {
   const films = getFilms();
@@ -18,6 +19,8 @@ export default function HomePage() {
 
   return (
     <>
+      <ConceptHero />
+
       <HomeBrowse
         featured={featured}
         rows={[
