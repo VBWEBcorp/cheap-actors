@@ -55,16 +55,20 @@ export default async function RootLayout({
 }) {
   // Tolerate stale/corrupt auth cookies (common in dev when AUTH_SECRET changes
   // or the port shifts) — render the layout without a session rather than 500.
+  // In static export builds we skip auth() altogether: it reads request
+  // headers, which Next.js refuses to do during prerender.
   let sessionEmail: string | null | undefined;
   let sessionName: string | null | undefined;
   let hasSession = false;
-  try {
-    const session = await auth();
-    sessionEmail = session?.user?.email;
-    sessionName = session?.user?.name;
-    hasSession = !!session?.user;
-  } catch (err) {
-    console.warn("[layout] auth() failed, continuing without session:", err);
+  if (process.env.BUILD_STATIC !== "1") {
+    try {
+      const session = await auth();
+      sessionEmail = session?.user?.email;
+      sessionName = session?.user?.name;
+      hasSession = !!session?.user;
+    } catch (err) {
+      console.warn("[layout] auth() failed, continuing without session:", err);
+    }
   }
 
   const navAuth = {

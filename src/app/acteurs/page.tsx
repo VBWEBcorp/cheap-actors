@@ -9,7 +9,6 @@ export const metadata = {
     "Catalogue d'acteurs et de réalisateurs. Filtrez, regardez, contactez.",
 };
 
-export const revalidate = 0;
 
 export default async function ActeursPage() {
   const { dbUsers, staticPeople } = await getAllPersonViews();

@@ -4,12 +4,17 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { getPersonViewBySlug, type PersonView } from "@/lib/person-view";
-import { posterFor } from "@/lib/catalog";
+import { people, posterFor } from "@/lib/catalog";
 import { PersonAvatar } from "@/components/person-avatar";
 import { PersonVideoPlayer } from "./video-player";
 import { ShareCard } from "./share-card";
 
-export const revalidate = 0;
+
+/** Pre-render the full static catalog at build time. DB users are
+ * still served on demand at runtime (fine when not in static export). */
+export async function generateStaticParams() {
+  return people.map((p) => ({ slug: p.slug }));
+}
 
 export async function generateMetadata({
   params,
