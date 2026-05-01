@@ -1,10 +1,5 @@
 import { MongoClient, type Db } from "mongodb";
 
-const uri = process.env.MONGODB_URI;
-if (!uri) {
-  throw new Error("MONGODB_URI is not defined in environment variables");
-}
-
 const DB_NAME = "cheap-actors";
 
 declare global {
@@ -12,24 +7,31 @@ declare global {
   var _mongoClientPromise: Promise<MongoClient> | undefined;
 }
 
-let clientPromise: Promise<MongoClient>;
-
-if (process.env.NODE_ENV === "development") {
-  // In dev, store the client on the global to avoid creating new
-  // connections on every HMR reload.
-  if (!global._mongoClientPromise) {
-    const client = new MongoClient(uri);
-    global._mongoClientPromise = client.connect();
+/**
+ * Lazy-initialize the MongoDB client. We DON'T throw at module-load
+ * because the build (and certain pages in DEMO_MODE) must succeed
+ * even when MONGODB_URI isn't configured. Callers should be wrapped
+ * in try/catch — see getAllPersonViews / getPersonViewBySlug.
+ */
+function getClientPromise(): Promise<MongoClient> {
+  const uri = process.env.MONGODB_URI;
+  if (!uri) {
+    return Promise.reject(new Error("MONGODB_URI is not configured"));
   }
-  clientPromise = global._mongoClientPromise;
-} else {
+
+  if (process.env.NODE_ENV === "development") {
+    if (!global._mongoClientPromise) {
+      const client = new MongoClient(uri);
+      global._mongoClientPromise = client.connect();
+    }
+    return global._mongoClientPromise;
+  }
+
   const client = new MongoClient(uri);
-  clientPromise = client.connect();
+  return client.connect();
 }
 
 export async function getDb(): Promise<Db> {
-  const client = await clientPromise;
+  const client = await getClientPromise();
   return client.db(DB_NAME);
 }
-
-export default clientPromise;
