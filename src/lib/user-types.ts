@@ -59,6 +59,13 @@ export type Video = {
   format: VideoFormat;
   title: string;
   youtubeId: string;
+  /**
+   * Cover image URL chosen by the author — what's shown as the
+   * preview before the video is actually played. Required for new
+   * submissions; older records may still rely on the YouTube
+   * auto-thumbnail as a fallback.
+   */
+  coverUrl?: string;
   year?: number;
   description?: string;
   /** Categories chosen by the author (multi-select, max 4). */

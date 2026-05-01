@@ -298,7 +298,7 @@ function VideoSection({
 }: {
   title: string;
   subtitle: string;
-  videos: { id: string; title: string; youtubeId: string; format: "horizontal" | "vertical"; year?: number; description?: string }[];
+  videos: { id: string; title: string; youtubeId: string; coverUrl?: string; format: "horizontal" | "vertical"; year?: number; description?: string }[];
 }) {
   return (
     <section className="mt-20 md:mt-32">

@@ -102,6 +102,10 @@ export const videoSchema = z.object({
   youtubeId: z
     .string()
     .regex(/^[a-zA-Z0-9_-]{11}$/, "ID YouTube invalide"),
+  coverUrl: z
+    .string()
+    .url("URL d'image de couverture invalide")
+    .min(1, "Image de couverture requise"),
   year: z.coerce.number().int().min(1900).max(new Date().getFullYear() + 1).optional(),
   description: z.string().max(280).optional().or(z.literal("")),
   tags: z
@@ -342,6 +346,7 @@ export async function addVideo(
     format: d.format,
     title: d.title,
     youtubeId: d.youtubeId,
+    coverUrl: d.coverUrl,
     year: d.year,
     description: d.description || undefined,
     tags: d.tags && d.tags.length > 0 ? d.tags : undefined,

@@ -112,6 +112,7 @@ export async function addVideoAction(
     format: format as VideoFormat,
     title: String(formData.get("title") ?? "").trim(),
     youtubeId,
+    coverUrl: String(formData.get("coverUrl") ?? "").trim(),
     year: yearNum,
     description: String(formData.get("description") ?? "").trim(),
     tags: tags.length > 0 ? tags : undefined,

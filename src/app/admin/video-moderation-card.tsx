@@ -26,7 +26,7 @@ export function VideoModerationCard({ userId, userName, userSlug, video }: Props
           >
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={youtubeThumbUrl(video.youtubeId)}
+              src={video.coverUrl || youtubeThumbUrl(video.youtubeId)}
               alt={video.title}
               className="absolute inset-0 h-full w-full object-cover"
             />

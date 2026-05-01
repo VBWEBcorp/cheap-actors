@@ -1,8 +1,7 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { Check, Plus, Trash2, X } from "lucide-react";
-import Image from "next/image";
+import { Check, ImageIcon, Plus, Trash2, X } from "lucide-react";
 import { addVideoAction, deleteVideoAction, type VideoState } from "./actions";
 import type { Video, ModerationStatus } from "@/lib/user-types";
 import { youtubeThumbUrl } from "@/lib/youtube";
@@ -108,6 +107,7 @@ function VideoSlot({
   video: Video;
   aspectClass: string;
 }) {
+  const cover = video.coverUrl || youtubeThumbUrl(video.youtubeId);
   return (
     <article className="group relative">
       <div
@@ -116,12 +116,12 @@ function VideoSlot({
           aspectClass,
         )}
       >
-        <Image
-          src={youtubeThumbUrl(video.youtubeId)}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={cover}
           alt={video.title}
-          fill
-          sizes="(max-width: 768px) 33vw, 280px"
-          className="object-cover"
+          className="absolute inset-0 h-full w-full object-cover"
+          loading="lazy"
         />
         <div className="absolute left-2 top-2">
           <StatusBadge status={video.status} />
@@ -210,11 +210,14 @@ function AddVideoForm({
   onClose: () => void;
 }) {
   const [state, action, pending] = useActionState(addVideoAction, initial);
+  const [coverUrl, setCoverUrl] = useState("");
 
   // Auto-close on success
   if (state.ok) {
     setTimeout(onClose, 800);
   }
+
+  const isVertical = format === "vertical";
 
   return (
     <form
@@ -250,6 +253,45 @@ function AddVideoForm({
           className="add-input mt-1"
         />
       </label>
+
+      {/* Cover image (required) */}
+      <div>
+        <span className="flex items-baseline justify-between font-mono text-[10px] uppercase tracking-[0.28em] text-smoke">
+          Image de couverture
+          <span className="text-[9px] normal-case tracking-tight text-smoke/70">
+            {isVertical ? "Format 9:16 idéal" : "Format 16:9 idéal"} — c'est ce
+            qu'on verra avant de lancer la vidéo
+          </span>
+        </span>
+        <div className="mt-1 grid gap-3 sm:grid-cols-[1fr_140px]">
+          <input
+            name="coverUrl"
+            type="url"
+            required
+            value={coverUrl}
+            onChange={(e) => setCoverUrl(e.target.value)}
+            placeholder="https://… (URL d'une image hébergée)"
+            className="add-input"
+          />
+          <div
+            className={cn(
+              "relative flex items-center justify-center overflow-hidden border border-ink/15 bg-chalk",
+              isVertical ? "aspect-[9/16] w-[80px] sm:w-full" : "aspect-video",
+            )}
+          >
+            {coverUrl ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img
+                src={coverUrl}
+                alt="Aperçu couverture"
+                className="absolute inset-0 h-full w-full object-cover"
+              />
+            ) : (
+              <ImageIcon className="h-5 w-5 text-smoke/40" />
+            )}
+          </div>
+        </div>
+      </div>
 
       <div className="grid gap-3 md:grid-cols-[1fr_140px]">
         <label className="block">

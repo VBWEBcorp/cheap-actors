@@ -239,7 +239,7 @@ function VideoControlRow({ userId, video }: { userId: string; video: Video }) {
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={youtubeThumbUrl(video.youtubeId)}
+          src={video.coverUrl || youtubeThumbUrl(video.youtubeId)}
           alt={video.title}
           className="absolute inset-0 h-full w-full object-cover"
         />

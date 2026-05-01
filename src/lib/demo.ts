@@ -29,6 +29,8 @@ export const DEMO_USER: PublicUser = {
       format: "horizontal",
       title: "Une journée comme une autre",
       youtubeId: "dQw4w9WgXcQ",
+      coverUrl:
+        "https://images.unsplash.com/photo-1485095329183-d0797cdc5676?q=80&w=1200&auto=format&fit=crop",
       year: 2025,
       description: "Le jour où il a oublié son texte. Tournage à 3.",
       tags: ["Comédie dramatique", "Décalé", "Tourné en équipe réduite"],
@@ -41,6 +43,8 @@ export const DEMO_USER: PublicUser = {
       format: "horizontal",
       title: "L'après-midi du 14",
       youtubeId: "dQw4w9WgXcQ",
+      coverUrl:
+        "https://images.unsplash.com/photo-1502139214982-d0ad755818d8?q=80&w=1200&auto=format&fit=crop",
       year: 2024,
       description: "Court-métrage de 12 minutes sur l'attente.",
       tags: ["Drame", "Émouvant", "Premier film"],
@@ -52,6 +56,8 @@ export const DEMO_USER: PublicUser = {
       format: "vertical",
       title: "Métro 6h47",
       youtubeId: "dQw4w9WgXcQ",
+      coverUrl:
+        "https://images.unsplash.com/photo-1517292987719-0369a794ec0f?q=80&w=900&auto=format&fit=crop",
       year: 2025,
       description: "60 secondes verticales. Pas de dialogue.",
       tags: ["Expérimental", "Décalé"],
@@ -64,6 +70,8 @@ export const DEMO_USER: PublicUser = {
       format: "vertical",
       title: "Trois mots de trop",
       youtubeId: "dQw4w9WgXcQ",
+      coverUrl:
+        "https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=900&auto=format&fit=crop",
       year: 2025,
       tags: ["Romance", "Émouvant"],
       status: "rejected",
@@ -121,6 +129,8 @@ export const DEMO_PENDING_VIDEOS = [
       format: "horizontal" as const,
       title: "Sortie d'usine",
       youtubeId: "dQw4w9WgXcQ",
+      coverUrl:
+        "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop",
       year: 2025,
       description: "Court-métrage de 18 minutes. Tourné en deux nuits.",
       status: "pending" as const,
@@ -136,6 +146,8 @@ export const DEMO_PENDING_VIDEOS = [
       format: "vertical" as const,
       title: "Coup de fil",
       youtubeId: "dQw4w9WgXcQ",
+      coverUrl:
+        "https://images.unsplash.com/photo-1520637836862-4d197d17c93a?q=80&w=900&auto=format&fit=crop",
       year: 2025,
       description: "60 secondes. Une voix off. Une rue.",
       status: "pending" as const,
