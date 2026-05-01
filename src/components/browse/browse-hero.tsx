@@ -24,7 +24,7 @@ export function BrowseHero({ film, onPlay, onInfo }: Props) {
   return (
     <section
       ref={ref}
-      className="relative h-[88svh] min-h-[600px] w-full overflow-hidden"
+      className="relative h-[88svh] min-h-[480px] w-full overflow-hidden"
     >
       {/* Background image */}
       <div className="absolute inset-0">
@@ -44,7 +44,7 @@ export function BrowseHero({ film, onPlay, onInfo }: Props) {
 
       <motion.div
         style={{ y, opacity }}
-        className="relative z-10 flex h-full max-w-[1800px] flex-col justify-end px-5 pb-16 pt-32 md:px-10 md:pb-20"
+        className="relative z-10 mx-auto flex h-full max-w-[1800px] flex-col justify-end px-5 pb-10 pt-24 md:px-10 md:pb-20 md:pt-32"
       >
         <p className="mb-3 inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.28em] text-flame">
           <span className="h-1 w-1 rounded-full bg-flame animate-pulse" />

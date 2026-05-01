@@ -59,7 +59,7 @@ export function SoumettreClient() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-          className="mt-10 font-display font-black leading-[0.86] tracking-[-0.04em] text-[clamp(56px,12vw,200px)]"
+          className="mt-8 font-display font-black leading-[0.88] tracking-[-0.04em] text-[clamp(48px,11vw,200px)] md:mt-10 md:leading-[0.86]"
         >
           Soumettez<span className="text-flame">.</span>
         </motion.h1>

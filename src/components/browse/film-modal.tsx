@@ -154,7 +154,7 @@ export function FilmModal({
                   </p>
                 </div>
 
-                <aside className="space-y-4 md:border-l md:border-ink/15 md:pl-8">
+                <aside className="space-y-4 border-t border-ink/10 pt-6 md:border-l md:border-t-0 md:border-ink/15 md:pl-8 md:pt-0">
                   <Field label="Distribution">
                     {film.cast.map((p) => p.name).join(", ")}
                   </Field>

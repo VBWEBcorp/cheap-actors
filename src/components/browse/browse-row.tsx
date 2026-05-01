@@ -262,7 +262,7 @@ function NumberedCard({
       {/* Huge number outline behind */}
       <span
         aria-hidden
-        className="-mr-2 select-none font-display font-black italic leading-[0.78] tracking-[-0.08em] text-[clamp(140px,18vw,260px)] md:-mr-4"
+        className="-mr-2 select-none font-display font-black italic leading-[0.78] tracking-[-0.08em] text-[clamp(96px,16vw,260px)] md:-mr-4"
         style={{
           WebkitTextStroke: "2px rgba(12,12,12,0.85)",
           color: "transparent",
