@@ -148,6 +148,7 @@ function ShortsBrowseInner({ rows }: Props) {
         rank={selectedRank}
         similar={similar}
         onClose={close}
+        onSelectSimilar={(f) => open(f)}
       />
     </>
   );

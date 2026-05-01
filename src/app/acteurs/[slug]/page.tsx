@@ -171,7 +171,7 @@ export default async function PersonnePage({
                   <Link
                     href={
                       f.format === "film"
-                        ? `/films/${f.slug}`
+                        ? `/?film=${f.slug}`
                         : `/shorts?id=${f.id}`
                     }
                     className="group block"
@@ -220,7 +220,7 @@ export default async function PersonnePage({
             Annuaire
           </Link>
           <Link
-            href="/films"
+            href="/"
             className="group inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.28em] text-smoke transition hover:text-ink"
           >
             Programme

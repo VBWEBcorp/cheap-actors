@@ -3,16 +3,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu, X, User } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { DemoLoginModal } from "./demo-login-modal";
 
 const links = [
-  { href: "/films", label: "Films", n: "01" },
-  { href: "/shorts", label: "Shorts", n: "02" },
-  { href: "/acteurs", label: "Acteurs", n: "03" },
-  { href: "/manifeste", label: "Manifeste", n: "04" },
+  { href: "/shorts", label: "Shorts", n: "01" },
+  { href: "/acteurs", label: "Acteurs", n: "02" },
+  { href: "/manifeste", label: "Manifeste", n: "03" },
 ];
 
 export type NavbarAuth = {
@@ -31,11 +30,27 @@ export function Navbar({
   const pathname = usePathname();
   const [open, setOpen] = useState(false);
   const [demoModalOpen, setDemoModalOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
 
   const openDemoLogin = () => {
     setOpen(false);
     setDemoModalOpen(true);
   };
+
+  // Pill button styling — flips between mix-blend-paper (top of page) and ink-on-cream (scrolled)
+  const pillBase = scrolled
+    ? "md:border md:border-ink/30 md:hover:border-ink md:hover:bg-ink md:hover:text-paper"
+    : "md:border md:border-paper/30 md:hover:border-paper md:hover:bg-paper md:hover:text-ink";
+  const pillActive = scrolled
+    ? "md:border-ink md:bg-ink md:text-paper"
+    : "md:border-paper md:bg-paper md:text-ink";
 
   return (
     <>
@@ -43,9 +58,19 @@ export function Navbar({
         initial={{ y: -20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed inset-x-0 top-0 z-50 mix-blend-difference"
+        className={cn(
+          "fixed inset-x-0 top-0 z-50 transition-[background-color,backdrop-filter,border-color] duration-300",
+          scrolled
+            ? "border-b border-ink/10 bg-paper/80 backdrop-blur-md"
+            : "mix-blend-difference",
+        )}
       >
-        <div className="mx-auto flex h-16 max-w-[1800px] items-center justify-between px-5 text-paper md:px-10">
+        <div
+          className={cn(
+            "mx-auto flex h-16 max-w-[1800px] items-center justify-between px-5 md:px-10",
+            scrolled ? "text-ink" : "text-paper",
+          )}
+        >
           <Link
             href="/"
             onClick={() => setOpen(false)}
@@ -90,9 +115,9 @@ export function Navbar({
               <Link
                 href="/mon-compte"
                 className={cn(
-                  "inline-flex items-center gap-2 px-3 py-2 text-[11px] font-medium uppercase tracking-[0.18em] transition md:border md:border-paper/30 md:px-4 md:hover:border-paper md:hover:bg-paper md:hover:text-ink",
-                  pathname.startsWith("/mon-compte") &&
-                    "md:border-paper md:bg-paper md:text-ink",
+                  "inline-flex items-center gap-2 px-3 py-2 text-[11px] font-medium uppercase tracking-[0.18em] transition md:px-4",
+                  pillBase,
+                  pathname.startsWith("/mon-compte") && pillActive,
                 )}
               >
                 <User className="h-3.5 w-3.5" />
@@ -103,7 +128,10 @@ export function Navbar({
               <button
                 type="button"
                 onClick={openDemoLogin}
-                className="inline-flex items-center gap-2 px-3 py-2 text-[11px] font-medium uppercase tracking-[0.18em] transition md:border md:border-paper/30 md:px-4 md:hover:border-paper md:hover:bg-paper md:hover:text-ink"
+                className={cn(
+                  "inline-flex items-center gap-2 px-3 py-2 text-[11px] font-medium uppercase tracking-[0.18em] transition md:px-4",
+                  pillBase,
+                )}
               >
                 <span className="hidden md:inline">Connexion</span>
                 <span className="md:hidden link-underline">Connexion</span>
@@ -120,9 +148,9 @@ export function Navbar({
                 <Link
                   href="/creer-un-compte"
                   className={cn(
-                    "inline-flex items-center gap-2 px-3 py-2 text-[11px] font-medium uppercase tracking-[0.18em] transition md:border md:border-paper/30 md:px-4 md:hover:border-paper md:hover:bg-paper md:hover:text-ink",
-                    pathname.startsWith("/creer-un-compte") &&
-                      "md:border-paper md:bg-paper md:text-ink",
+                    "inline-flex items-center gap-2 px-3 py-2 text-[11px] font-medium uppercase tracking-[0.18em] transition md:px-4",
+                    pillBase,
+                    pathname.startsWith("/creer-un-compte") && pillActive,
                   )}
                 >
                   <span className="hidden md:inline">Créer un compte</span>

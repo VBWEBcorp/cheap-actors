@@ -1,9 +1,8 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { Play, X, Plus, ThumbsUp, Info } from "lucide-react";
+import { Play, X, Plus, ThumbsUp } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { backdropFor, posterFor, type Film } from "@/lib/catalog";
 import { YouTubePlayer } from "@/components/youtube-player";
@@ -13,9 +12,17 @@ type Props = {
   similar?: Film[];
   rank?: number;
   onClose: () => void;
+  /** Optional callback to swap the displayed film (used by similar-titles cards) */
+  onSelectSimilar?: (film: Film) => void;
 };
 
-export function FilmModal({ film, similar = [], rank, onClose }: Props) {
+export function FilmModal({
+  film,
+  similar = [],
+  rank,
+  onClose,
+  onSelectSimilar,
+}: Props) {
   const [playing, setPlaying] = useState(false);
 
   // Lock scroll & support ESC
@@ -145,16 +152,6 @@ export function FilmModal({ film, similar = [], rank, onClose }: Props) {
                   <p className="mt-4 font-display text-base leading-snug md:text-lg">
                     {film.synopsis}
                   </p>
-
-                  <div className="mt-6">
-                    <Link
-                      href={`/films/${film.slug}`}
-                      className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-flame transition hover:text-ink"
-                    >
-                      <Info className="h-3.5 w-3.5" />
-                      Fiche complète
-                    </Link>
-                  </div>
                 </div>
 
                 <aside className="space-y-4 md:border-l md:border-ink/15 md:pl-8">
@@ -176,7 +173,10 @@ export function FilmModal({ film, similar = [], rank, onClose }: Props) {
                 <ul className="mt-5 grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4">
                   {similar.slice(0, 6).map((f) => (
                     <li key={f.id}>
-                      <SimilarCard film={f} />
+                      <SimilarCard
+                        film={f}
+                        onSelect={onSelectSimilar}
+                      />
                     </li>
                   ))}
                 </ul>
@@ -206,9 +206,19 @@ function Field({
   );
 }
 
-function SimilarCard({ film }: { film: Film }) {
+function SimilarCard({
+  film,
+  onSelect,
+}: {
+  film: Film;
+  onSelect?: (film: Film) => void;
+}) {
   return (
-    <Link href={`/films/${film.slug}`} className="group block">
+    <button
+      type="button"
+      onClick={() => onSelect?.(film)}
+      className="group block w-full text-left"
+    >
       <div className="relative aspect-video overflow-hidden bg-chalk">
         <Image
           src={posterFor(film)}
@@ -227,6 +237,6 @@ function SimilarCard({ film }: { film: Film }) {
       <p className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.18em] text-smoke">
         {film.year} · {film.genres[0]}
       </p>
-    </Link>
+    </button>
   );
 }

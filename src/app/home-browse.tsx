@@ -1,6 +1,7 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { type Film, getRelatedFilms } from "@/lib/catalog";
 import { BrowseHero } from "@/components/browse/browse-hero";
 import { BrowseRow, BrowseTopRow } from "@/components/browse/browse-row";
@@ -22,14 +23,32 @@ type Props = {
 };
 
 export function HomeBrowse({ featured, rows, shorts }: Props) {
+  return (
+    <Suspense fallback={null}>
+      <HomeBrowseInner featured={featured} rows={rows} shorts={shorts} />
+    </Suspense>
+  );
+}
+
+function HomeBrowseInner({ featured, rows, shorts }: Props) {
   const [selected, setSelected] = useState<Film | null>(null);
   const [selectedRank, setSelectedRank] = useState<number | undefined>();
   const [tagFilters, setTagFilters] = useState<Set<string>>(new Set());
+  const params = useSearchParams();
 
   const open = (film: Film, rank?: number) => {
     setSelected(film);
     setSelectedRank(rank);
   };
+
+  // Deep-link via ?film=slug — open the modal for that film on mount
+  useEffect(() => {
+    const slug = params.get("film");
+    if (!slug) return;
+    const all = [...rows.flatMap((r) => r.films), ...shorts];
+    const found = all.find((f) => f.slug === slug);
+    if (found) setSelected(found);
+  }, [params, rows, shorts]);
   const close = () => {
     setSelected(null);
     setSelectedRank(undefined);
@@ -143,6 +162,7 @@ export function HomeBrowse({ featured, rows, shorts }: Props) {
         rank={selectedRank}
         similar={similar}
         onClose={close}
+        onSelectSimilar={(f) => open(f)}
       />
     </>
   );

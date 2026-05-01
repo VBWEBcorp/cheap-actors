@@ -127,7 +127,7 @@ export function ManifesteClient() {
                   hello@cheap-actors.com →
                 </a>
                 <Link
-                  href="/films"
+                  href="/"
                   className="link-underline font-mono text-sm"
                 >
                   Voir le programme →

@@ -53,7 +53,7 @@ export function Footer() {
                 Index
               </p>
               <ul className="mt-4 space-y-2 text-sm">
-                <li><Link href="/films" className="link-underline">Films</Link></li>
+                <li><Link href="/" className="link-underline">Programme</Link></li>
                 <li><Link href="/shorts" className="link-underline">Shorts</Link></li>
                 <li><Link href="/acteurs" className="link-underline">Acteurs</Link></li>
                 <li><Link href="/manifeste" className="link-underline">Manifeste</Link></li>
