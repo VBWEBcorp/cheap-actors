@@ -140,10 +140,12 @@ export function BrowseTopRow({
   title,
   films,
   onSelect,
+  variant = "horizontal",
 }: {
   title: string;
   films: Film[];
   onSelect: (film: Film) => void;
+  variant?: "horizontal" | "vertical";
 }) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [canLeft, setCanLeft] = useState(false);
@@ -234,6 +236,7 @@ export function BrowseTopRow({
               film={f}
               rank={i + 1}
               onClick={() => onSelect(f)}
+              variant={variant}
             />
           ))}
           <div className="w-2 shrink-0 md:w-6" aria-hidden />
@@ -247,10 +250,12 @@ function NumberedCard({
   film,
   rank,
   onClick,
+  variant = "horizontal",
 }: {
   film: Film;
   rank: number;
   onClick: () => void;
+  variant?: "horizontal" | "vertical";
 }) {
   return (
     <div className="relative flex shrink-0 items-end gap-1">
@@ -265,7 +270,11 @@ function NumberedCard({
       >
         {rank}
       </span>
-      <BrowseCard film={film} onClick={onClick} />
+      {variant === "vertical" ? (
+        <VerticalBrowseCard film={film} onClick={onClick} />
+      ) : (
+        <BrowseCard film={film} onClick={onClick} />
+      )}
     </div>
   );
 }
