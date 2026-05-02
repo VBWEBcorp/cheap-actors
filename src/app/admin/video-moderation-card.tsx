@@ -49,7 +49,7 @@ export function VideoModerationCard({ userId, userName, userSlug, video }: Props
             {video.title}
           </h3>
           <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.22em] text-smoke">
-            {video.year ?? "—"} · {video.format} · YouTube ID{" "}
+            {video.year ?? "·"} · {video.format} · YouTube ID{" "}
             <span className="text-ink">{video.youtubeId}</span>
           </p>
 

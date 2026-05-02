@@ -79,7 +79,7 @@ export function ProfileForm({ initial: user }: { initial: PublicUser }) {
             </div>
           </Field>
 
-          <Field label="En une phrase" htmlFor="tagline" hint="Max 120 — c'est la phrase qu'on lit sous votre nom">
+          <Field label="En une phrase" htmlFor="tagline" hint="Max 120, c'est la phrase qu'on lit sous votre nom">
             <input
               id="tagline"
               name="tagline"
@@ -94,7 +94,7 @@ export function ProfileForm({ initial: user }: { initial: PublicUser }) {
       </div>
 
       {/* Bio (full width) */}
-      <Field label="Présentation" htmlFor="bio" hint="Max 800 — quelques phrases sur vous">
+      <Field label="Présentation" htmlFor="bio" hint="Max 800, quelques phrases sur vous">
         <textarea
           id="bio"
           name="bio"
@@ -106,7 +106,7 @@ export function ProfileForm({ initial: user }: { initial: PublicUser }) {
         />
       </Field>
 
-      {/* Optional details — collapsible */}
+      {/* Optional details, collapsible */}
       <div className="border border-ink/10">
         <button
           type="button"

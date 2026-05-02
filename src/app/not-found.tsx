@@ -5,7 +5,7 @@ export default function NotFound() {
     <div className="flex min-h-[100svh] items-center justify-center px-5">
       <div className="mx-auto w-full max-w-[1400px]">
         <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-smoke">
-          ●  404 — hors champ
+          ●  404 · hors champ
         </p>
         <h1 className="mt-8 font-display font-black leading-[0.86] tracking-[-0.04em] text-[clamp(72px,14vw,220px)]">
           Coupez<span className="text-flame">.</span>

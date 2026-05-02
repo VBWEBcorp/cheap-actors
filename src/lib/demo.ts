@@ -1,81 +1,52 @@
 import type { PublicUser, UserModerationData } from "./user-types";
 
-/** Demo mode flag — when set, auth guards are bypassed and pages
+/** Demo mode flag, when set, auth guards are bypassed and pages
  * fall back to mock data so the whole platform can be explored from the front. */
 export const DEMO_MODE = process.env.DEMO_MODE === "1";
 export const DEMO_MODE_PUBLIC = process.env.NEXT_PUBLIC_DEMO_MODE === "1";
 
 const now = new Date();
 
-/** A fully-populated mock user used in demo mode for /mon-compte. */
+/** A fully-populated mock user used in demo mode for /mon-compte.
+ * Aligned with the public catalog: same person (Valentin), same two
+ * videos, so the demo experience matches what a visitor sees on /. */
 export const DEMO_USER: PublicUser = {
   id: "demo-user",
-  slug: "vous",
-  displayName: "Vous (démo)",
-  roles: ["acteur", "réalisateur"],
-  tagline: "Joue. Filme. Doute. Recommence.",
+  slug: "valentin-beasse",
+  displayName: "Valentin Béasse",
+  roles: ["acteur"],
+  tagline: "A quitté le consulting pour la scène. Sans regret apparent.",
   bio:
-    "Voici à quoi ressemble votre fiche, dans la peau d'un compte démo. " +
-    "Modifiez ce que vous voulez — rien n'est sauvegardé en base. Quand vous " +
-    "désactiverez le mode démo, la vraie authentification reprendra la main.",
-  photoUrl: undefined,
+    "Valentin a fait Cours Florent puis La Volia, après quelques années dans le consulting. Joue sur scène, devant la caméra, et en format vertical de plus en plus souvent.",
+  photoUrl: "https://i.ibb.co/zHByKBzx/Studio-2.jpg",
   basedIn: "Paris",
-  born: 1995,
-  funFact: "Connaît tous les acteurs de Cheap Actors. Aucun ne le connaît.",
+  funFact:
+    "A codé son propre site avant son book. L'ordre des priorités, on en reparlera.",
   status: "approved",
   videos: [
     {
       id: "demo-h1",
       format: "horizontal",
-      title: "Une journée comme une autre",
-      youtubeId: "dQw4w9WgXcQ",
-      coverUrl:
-        "https://images.unsplash.com/photo-1485095329183-d0797cdc5676?q=80&w=1200&auto=format&fit=crop",
-      year: 2025,
-      description: "Le jour où il a oublié son texte. Tournage à 3.",
-      tags: ["Comédie dramatique", "Décalé", "Tourné en équipe réduite"],
+      title: "D'amour et d'eau fraîche",
+      youtubeId: "KQQ3p5SPdWA",
+      coverUrl: "https://i.ytimg.com/vi/KQQ3p5SPdWA/hqdefault.jpg",
+      year: 2024,
+      description: "Court-métrage de Pierre Lavalette et Martin Baillon.",
+      tags: ["Drame", "Romance", "Émouvant", "Premier film"],
       status: "approved",
       submittedAt: now,
       reviewedAt: now,
-    },
-    {
-      id: "demo-h2",
-      format: "horizontal",
-      title: "L'après-midi du 14",
-      youtubeId: "dQw4w9WgXcQ",
-      coverUrl:
-        "https://images.unsplash.com/photo-1502139214982-d0ad755818d8?q=80&w=1200&auto=format&fit=crop",
-      year: 2024,
-      description: "Court-métrage de 12 minutes sur l'attente.",
-      tags: ["Drame", "Émouvant", "Premier film"],
-      status: "pending",
-      submittedAt: now,
     },
     {
       id: "demo-v1",
       format: "vertical",
-      title: "Métro 6h47",
-      youtubeId: "dQw4w9WgXcQ",
-      coverUrl:
-        "https://images.unsplash.com/photo-1517292987719-0369a794ec0f?q=80&w=900&auto=format&fit=crop",
+      title: "Et vous, vous auriez osé ?",
+      youtubeId: "u1YgHYJ-grw",
+      coverUrl: "https://i.ibb.co/zVjn253f/Studio-3.jpg",
       year: 2025,
-      description: "60 secondes verticales. Pas de dialogue.",
-      tags: ["Expérimental", "Décalé"],
+      description: "Sketch vertical. Un mariage, une réplique, un risque.",
+      tags: ["Comédie", "Décalé", "Absurde", "Auto-produit"],
       status: "approved",
-      submittedAt: now,
-      reviewedAt: now,
-    },
-    {
-      id: "demo-v2",
-      format: "vertical",
-      title: "Trois mots de trop",
-      youtubeId: "dQw4w9WgXcQ",
-      coverUrl:
-        "https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=900&auto=format&fit=crop",
-      year: 2025,
-      tags: ["Romance", "Émouvant"],
-      status: "rejected",
-      rejectionReason: "Trop bien éclairé.",
       submittedAt: now,
       reviewedAt: now,
     },
@@ -84,74 +55,24 @@ export const DEMO_USER: PublicUser = {
   updatedAt: now,
 };
 
-/** Mock pending users for /admin to showcase the moderation UI. */
-export const DEMO_PENDING_USERS: UserModerationData[] = [
-  {
-    id: "demo-pending-1",
-    email: "noe.castagnet@example.com",
-    displayName: "Noé Castagnet",
-    slug: "noe-castagnet",
-    roles: ["réalisateur"],
-    bio: "Réalisateur autodidacte, basé à Paris. Tourne entre amis et avec des moyens limités.",
-    tagline: "Filme ce qu'il voit, monte ce qu'il a.",
-    basedIn: "Paris",
-    born: 1992,
-    photoUrl: undefined,
-    videos: [],
-    status: "pending",
-    createdAt: now.toISOString(),
-  },
-  {
-    id: "demo-pending-2",
-    email: "sara.mendes@example.com",
-    displayName: "Sara Mendès",
-    slug: "sara-mendes",
-    roles: ["actrice", "réalisatrice"],
-    bio: "Comédienne et réalisatrice. Préfère écrire ses rôles que les attendre.",
-    tagline: "Préfère écrire ses rôles.",
-    basedIn: "Lyon",
-    born: 1996,
-    photoUrl: undefined,
-    videos: [],
-    status: "pending",
-    createdAt: now.toISOString(),
-  },
-];
+/** Mock pending users for /admin. Vide en démo : la DB sert quand
+ * il y a vraiment des comptes en attente. */
+export const DEMO_PENDING_USERS: UserModerationData[] = [];
 
-/** Mock pending videos for /admin to showcase. */
-export const DEMO_PENDING_VIDEOS = [
-  {
-    userId: "demo-pending-1",
-    userName: "Noé Castagnet",
-    userSlug: "noe-castagnet",
-    video: {
-      id: "demo-pv-1",
-      format: "horizontal" as const,
-      title: "Sortie d'usine",
-      youtubeId: "dQw4w9WgXcQ",
-      coverUrl:
-        "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop",
-      year: 2025,
-      description: "Court-métrage de 18 minutes. Tourné en deux nuits.",
-      status: "pending" as const,
-      submittedAt: now,
-    },
-  },
-  {
-    userId: "demo-pending-2",
-    userName: "Sara Mendès",
-    userSlug: "sara-mendes",
-    video: {
-      id: "demo-pv-2",
-      format: "vertical" as const,
-      title: "Coup de fil",
-      youtubeId: "dQw4w9WgXcQ",
-      coverUrl:
-        "https://images.unsplash.com/photo-1520637836862-4d197d17c93a?q=80&w=900&auto=format&fit=crop",
-      year: 2025,
-      description: "60 secondes. Une voix off. Une rue.",
-      status: "pending" as const,
-      submittedAt: now,
-    },
-  },
-];
+/** Mock pending videos for /admin. Vide pour la même raison. */
+export const DEMO_PENDING_VIDEOS: {
+  userId: string;
+  userName: string;
+  userSlug: string;
+  video: {
+    id: string;
+    format: "horizontal" | "vertical";
+    title: string;
+    youtubeId: string;
+    coverUrl?: string;
+    year?: number;
+    description?: string;
+    status: "pending";
+    submittedAt: Date;
+  };
+}[] = [];

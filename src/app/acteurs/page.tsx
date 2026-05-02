@@ -6,7 +6,14 @@ import { ActorsBrowser } from "./actors-browser";
 export const metadata = {
   title: "Acteurs",
   description:
-    "Catalogue d'acteurs et de réalisateurs. Filtrez, regardez, contactez.",
+    "Annuaire d'acteurs, actrices, réalisateurs et réalisatrices indépendants. Filtrez par rôle, ville, format. Contactez-les directement. Aucun agent au milieu.",
+  alternates: { canonical: "/acteurs" },
+  openGraph: {
+    title: "Annuaire des acteurs · Cheap Actors",
+    description:
+      "Filtrez. Regardez. Contactez. Sans agent, sans intermédiaire, sans abonnement.",
+    url: "/acteurs",
+  },
 };
 
 // Always render server-side at request time (fresh DB data + no static
@@ -24,7 +31,7 @@ export default async function ActeursPage() {
         <div className="mb-10 grid grid-cols-12 gap-4 md:mb-16">
           <div className="col-span-12 md:col-span-9">
             <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-smoke">
-              ●  Annuaire — {String(all.length).padStart(2, "0")} fiches
+              ●  Annuaire · {String(all.length).padStart(2, "0")} fiches
             </p>
             <h1 className="mt-4 font-display font-black leading-[0.88] tracking-[-0.04em] text-[clamp(48px,11vw,200px)] md:mt-6 md:leading-[0.86]">
               Acteurs<span className="text-flame">.</span>

@@ -36,7 +36,7 @@ const REJECTION_REASONS = [
   "On a regardé deux fois. Toujours rien.",
 ];
 
-const MAILTO_TEMPLATE = `mailto:hello@cheap-actors.com?subject=${encodeURIComponent("Soumission — [Titre du film]")}&body=${encodeURIComponent(
+const MAILTO_TEMPLATE = `mailto:hello@cheap-actors.com?subject=${encodeURIComponent("Soumission, [Titre du film]")}&body=${encodeURIComponent(
   `Bonjour,\n\nVoici mon film pour Cheap Actors.\n\nTitre : \nDurée : \nFormat (court-métrage / short) : \nAnnée : \nLien YouTube (non listé OK) : \n\nSynopsis (3 lignes max) :\n\n\nQui joue / qui réalise :\n\n\nUne phrase pour me présenter (facultatif) :\n\n\nMerci,\n[Votre nom]`,
 )}`;
 

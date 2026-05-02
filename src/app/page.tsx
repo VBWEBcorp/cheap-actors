@@ -1,21 +1,47 @@
 import Link from "next/link";
-import { getFilms, getShorts } from "@/lib/catalog";
+import { getFilms, getShorts, type Film } from "@/lib/catalog";
 import { HomeBrowse } from "./home-browse";
 import { TickerLine } from "@/components/ticker-line";
 import { ConceptHero } from "@/components/concept-hero";
+
+/**
+ * Demo-only filler: cycle through the catalog and emit `target` items
+ * with unique ids so the rows look populated even though the dataset
+ * is one film + one short. To remove later when the DB starts feeding
+ * real content into the rows.
+ */
+function pad(items: Film[], target: number): Film[] {
+  if (items.length === 0) return [];
+  return Array.from({ length: target }, (_, i) => {
+    const src = items[i % items.length];
+    return { ...src, id: `${src.id}-${i}` };
+  });
+}
+
+const ROW_SIZE = 10;
 
 export default function HomePage() {
   const films = getFilms();
   const shorts = getShorts();
 
-  // Build curated rows from the static catalog. Once DB users post videos,
-  // these rows can be augmented or replaced server-side.
-  const featured = films[0]; // first film as hero
-  const dramas = films.filter((f) => f.genres.includes("Drame"));
-  const thrillers = films.filter((f) => f.genres.some((g) => /thriller|noir|polar/i.test(g)));
-  const comedies = films.filter((f) => f.genres.includes("Comédie"));
-  const recent = [...films].sort((a, b) => b.year - a.year);
-  const editorsPicks = films.slice(0, Math.min(films.length, 4));
+  const featured = films[0];
+
+  // Rows derived from the catalog, then padded for visual density (demo).
+  const filmsRow = pad(films, ROW_SIZE);
+  const dramas = pad(films.filter((f) => f.genres.includes("Drame")), ROW_SIZE);
+  const romance = pad(
+    films.filter((f) => f.genres.includes("Romance")),
+    ROW_SIZE,
+  );
+  const emouvant = pad(
+    films.filter((f) => f.genres.includes("Émouvant")),
+    ROW_SIZE,
+  );
+  const premier = pad(
+    films.filter((f) => f.genres.includes("Premier film")),
+    ROW_SIZE,
+  );
+  const shortsRow = pad(shorts, ROW_SIZE);
 
   return (
     <>
@@ -24,15 +50,41 @@ export default function HomePage() {
       <HomeBrowse
         featured={featured}
         rows={[
-          { title: "À l'affiche", subtitle: "Notre sélection du moment", films: films, featuredFirst: true },
-          { title: "Top des plus vus", films: films, top: true },
-          { title: "Coups de cœur de la rédaction", subtitle: "★ choisis à la main", films: editorsPicks },
-          { title: "Récents", subtitle: `Sortis en ${recent[0]?.year ?? "2025"}`, films: recent },
+          {
+            title: "À l'affiche",
+            subtitle: "Notre sélection du moment",
+            films: filmsRow,
+            featuredFirst: true,
+          },
+          { title: "Top des plus vus", films: filmsRow, top: true },
+          {
+            title: "Coups de cœur de la rédaction",
+            subtitle: "★ choisis à la main",
+            films: filmsRow,
+          },
+          {
+            title: "Récents",
+            subtitle: `Sortis en ${films[0]?.year ?? "2025"}`,
+            films: filmsRow,
+          },
           { title: "Drames", films: dramas },
-          { title: "Thrillers & néo-noir", films: thrillers },
-          { title: "Comédies", subtitle: "Pour rire un peu, pas trop", films: comedies },
+          {
+            title: "Romance",
+            subtitle: "Sans agenda, sans pathos",
+            films: romance,
+          },
+          {
+            title: "Émouvant",
+            subtitle: "Sans manipuler, juste ce qu'il faut",
+            films: emouvant,
+          },
+          {
+            title: "Premier film",
+            subtitle: "On commence quelque part",
+            films: premier,
+          },
         ].filter((r) => r.films.length > 0)}
-        shorts={shorts}
+        shorts={shortsRow}
       />
 
       <TickerLine />

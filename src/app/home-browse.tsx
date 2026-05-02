@@ -41,7 +41,7 @@ function HomeBrowseInner({ featured, rows, shorts }: Props) {
     setSelectedRank(rank);
   };
 
-  // Deep-link via ?film=slug — open the modal for that film on mount
+  // Deep-link via ?film=slug, open the modal for that film on mount
   useEffect(() => {
     const slug = params.get("film");
     if (!slug) return;

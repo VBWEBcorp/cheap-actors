@@ -141,7 +141,7 @@ function VideoSlot({
         {video.title}
       </h4>
       <p className="mt-1 font-mono text-[9px] uppercase tracking-[0.22em] text-smoke">
-        {video.year ?? "—"} · {video.youtubeId}
+        {video.year ?? "·"} · {video.youtubeId}
       </p>
       {video.tags && video.tags.length > 0 && (
         <div className="mt-1.5 flex flex-wrap gap-1">
@@ -210,7 +210,8 @@ function AddVideoForm({
   onClose: () => void;
 }) {
   const [state, action, pending] = useActionState(addVideoAction, initial);
-  const [coverUrl, setCoverUrl] = useState("");
+  const [coverPreview, setCoverPreview] = useState<string>("");
+  const [coverError, setCoverError] = useState<string>("");
 
   // Auto-close on success
   if (state.ok) {
@@ -218,6 +219,28 @@ function AddVideoForm({
   }
 
   const isVertical = format === "vertical";
+
+  const onCoverChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCoverError("");
+    const file = e.target.files?.[0];
+    if (!file) {
+      setCoverPreview("");
+      return;
+    }
+    if (!/^image\/(jpeg|png|webp|avif)$/.test(file.type)) {
+      setCoverError("Format non supporté (JPG, PNG, WebP, AVIF)");
+      e.target.value = "";
+      setCoverPreview("");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      setCoverError("Image trop lourde (5 Mo max)");
+      e.target.value = "";
+      setCoverPreview("");
+      return;
+    }
+    setCoverPreview(URL.createObjectURL(file));
+  };
 
   return (
     <form
@@ -254,35 +277,44 @@ function AddVideoForm({
         />
       </label>
 
-      {/* Cover image (required) */}
+      {/* Cover image (required) — uploaded to R2 by the server action */}
       <div>
         <span className="flex items-baseline justify-between font-mono text-[10px] uppercase tracking-[0.28em] text-smoke">
           Image de couverture
           <span className="text-[9px] normal-case tracking-tight text-smoke/70">
-            {isVertical ? "Format 9:16 idéal" : "Format 16:9 idéal"} — c'est ce
-            qu'on verra avant de lancer la vidéo
+            {isVertical ? "Format 9:16 idéal" : "Format 16:9 idéal"} · 5 Mo max ·
+            JPG / PNG / WebP / AVIF
           </span>
         </span>
         <div className="mt-1 grid gap-3 sm:grid-cols-[1fr_140px]">
-          <input
-            name="coverUrl"
-            type="url"
-            required
-            value={coverUrl}
-            onChange={(e) => setCoverUrl(e.target.value)}
-            placeholder="https://… (URL d'une image hébergée)"
-            className="add-input"
-          />
+          <label
+            className={cn(
+              "flex cursor-pointer flex-col items-start justify-center border border-ink/15 px-3 py-2 transition hover:border-ink/40",
+              coverError && "border-flame",
+            )}
+          >
+            <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-smoke">
+              Choisir une image
+            </span>
+            <input
+              name="coverFile"
+              type="file"
+              accept="image/jpeg,image/png,image/webp,image/avif"
+              required
+              onChange={onCoverChange}
+              className="mt-1 w-full text-xs file:mr-3 file:border-0 file:bg-ink file:px-3 file:py-1.5 file:font-mono file:text-[10px] file:uppercase file:tracking-[0.18em] file:text-paper file:transition hover:file:bg-flame"
+            />
+          </label>
           <div
             className={cn(
               "relative flex items-center justify-center overflow-hidden border border-ink/15 bg-chalk",
               isVertical ? "aspect-[9/16] w-[80px] sm:w-full" : "aspect-video",
             )}
           >
-            {coverUrl ? (
+            {coverPreview ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
-                src={coverUrl}
+                src={coverPreview}
                 alt="Aperçu couverture"
                 className="absolute inset-0 h-full w-full object-cover"
               />
@@ -291,6 +323,11 @@ function AddVideoForm({
             )}
           </div>
         </div>
+        {coverError && (
+          <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-flame">
+            {coverError}
+          </p>
+        )}
       </div>
 
       <div className="grid gap-3 md:grid-cols-[1fr_140px]">
@@ -327,7 +364,7 @@ function AddVideoForm({
         <span className="flex items-baseline justify-between font-mono text-[10px] uppercase tracking-[0.28em] text-smoke">
           Tags / catégories
           <span className="text-[9px] normal-case tracking-tight text-smoke/70">
-            Max 4 — aide les visiteurs à vous trouver
+            Max 4, aide les visiteurs à vous trouver
           </span>
         </span>
         <div className="mt-2">

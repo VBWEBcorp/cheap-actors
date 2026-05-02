@@ -7,7 +7,7 @@ const { auth } = NextAuth(authConfig);
 const DEMO_MODE = process.env.DEMO_MODE === "1";
 
 export default auth((req) => {
-  // Demo mode — let everything through.
+  // Demo mode: let everything through.
   if (DEMO_MODE) return NextResponse.next();
 
   const isLoggedIn = !!req.auth;

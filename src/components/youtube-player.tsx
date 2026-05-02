@@ -5,9 +5,9 @@ import { cn } from "@/lib/cn";
 
 type Props = {
   youtubeId: string;
-  /** autoplay muted in background — for hero teasers */
+  /** autoplay muted in background, for hero teasers */
   background?: boolean;
-  /** aspect ratio class — defaults to 16/9 */
+  /** aspect ratio class, defaults to 16/9 */
   aspect?: "video" | "vertical" | "square";
   className?: string;
   title?: string;

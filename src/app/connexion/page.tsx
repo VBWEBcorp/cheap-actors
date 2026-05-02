@@ -5,6 +5,7 @@ import { LoginForm } from "./login-form";
 export const metadata = {
   title: "Connexion",
   description: "Accédez à votre fiche.",
+  robots: { index: false, follow: false },
 };
 
 export default function LoginPage() {

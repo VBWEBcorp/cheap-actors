@@ -8,7 +8,7 @@ const POINTS = [
   {
     n: "01",
     title: "Pas de tapis rouge.",
-    body: "On ne demande pas votre filmographie — la plupart des nôtres tiendraient sur un post-it. On regarde ce que vous avez tourné. On décide. C'est tout.",
+    body: "On ne demande pas votre filmographie, la plupart des nôtres tiendraient sur un post-it. On regarde ce que vous avez tourné. On décide. C'est tout.",
   },
   {
     n: "02",
@@ -23,7 +23,7 @@ const POINTS = [
   {
     n: "04",
     title: "Pas connus. Pas chers. Pas mal.",
-    body: "On ne fait pas semblant. Les acteurs ne sont pas connus. Les films n'ont rien coûté. Mais regardez — et jugez vous-même.",
+    body: "On ne fait pas semblant. Les acteurs ne sont pas connus. Les films n'ont rien coûté. Mais regardez, et jugez vous-même.",
   },
 ];
 
@@ -45,7 +45,7 @@ export function ManifesteClient() {
       >
         <motion.div style={{ y, opacity }} className="mx-auto w-full max-w-[1800px]">
           <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-smoke">
-            ●  Manifeste — version 0.1 (provisoire, comme tout ici)
+            ●  Manifeste · version 0.1 (provisoire, comme tout ici)
           </p>
           <motion.h1
             initial={{ opacity: 0, y: 40 }}
@@ -117,7 +117,7 @@ export function ManifesteClient() {
               <p className="mt-6 max-w-xl font-display text-lg leading-snug md:mt-8 md:text-xl">
                 On regarde tout, on répond à tout (sauf quand on dort).
                 Pas besoin d'un dossier. Un lien YouTube, trois lignes,
-                et on vous dit oui — ou non, mais en mieux écrit.
+                et on vous dit oui, ou non, mais en mieux écrit.
               </p>
               <div className="mt-10 flex flex-wrap items-center gap-6">
                 <a

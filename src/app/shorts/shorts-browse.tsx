@@ -42,7 +42,7 @@ function ShortsBrowseInner({ rows }: Props) {
     setSelectedRank(undefined);
   };
 
-  // Deep-link via ?id=… — opens the modal for the matching short on mount
+  // Deep-link via ?id=…, opens the modal for the matching short on mount
   useEffect(() => {
     const id = params.get("id");
     if (!id) return;
@@ -78,7 +78,7 @@ function ShortsBrowseInner({ rows }: Props) {
 
   return (
     <>
-      {/* Editorial header — replaces the BrowseHero (shorts have no horizontal backdrop) */}
+      {/* Editorial header, replaces the BrowseHero (shorts have no horizontal backdrop) */}
       <header className="relative pb-6 pt-28 md:pt-32">
         <div className="mx-auto max-w-[1800px] px-5 md:px-10">
           <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-flame">
@@ -149,6 +149,7 @@ function ShortsBrowseInner({ rows }: Props) {
         similar={similar}
         onClose={close}
         onSelectSimilar={(f) => open(f)}
+        autoPlay
       />
     </>
   );

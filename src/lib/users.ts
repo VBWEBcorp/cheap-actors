@@ -161,7 +161,7 @@ export function toAdminUser(u: UserDoc): AdminUser {
 async function usersCollection(): Promise<Collection<UserDoc>> {
   const db = await getDb();
   const col = db.collection<UserDoc>("users");
-  // Indexes are idempotent — safe to call repeatedly.
+  // Indexes are idempotent, safe to call repeatedly.
   await col.createIndex({ email: 1 }, { unique: true });
   await col.createIndex({ slug: 1 }, { unique: true });
   return col;
@@ -215,7 +215,7 @@ async function pickUniqueSlug(base: string): Promise<string> {
   const col = await usersCollection();
   let candidate = base || "anonyme";
   let counter = 2;
-  // 50 attempts max — vanishingly unlikely to collide further.
+  // 50 attempts max, vanishingly unlikely to collide further.
   for (let i = 0; i < 50; i++) {
     const exists = await col.findOne({ slug: candidate }, { projection: { _id: 1 } });
     if (!exists) return candidate;
@@ -246,7 +246,7 @@ export async function createUser(
   const now = new Date();
 
   // Super admins (listed in SUPER_ADMIN_EMAILS) get auto-approved on signup
-  // — chicken-and-egg otherwise: nobody could moderate the very first account.
+  //, chicken-and-egg otherwise: nobody could moderate the very first account.
   const initialStatus: ModerationStatus = isSuperAdmin(email)
     ? "approved"
     : "pending";

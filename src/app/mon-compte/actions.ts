@@ -15,6 +15,7 @@ import {
   type VideoFormat,
 } from "@/lib/users";
 import { extractYoutubeId } from "@/lib/youtube";
+import { uploadCover } from "@/lib/r2";
 
 async function requireUserId(): Promise<string> {
   const session = await auth();
@@ -102,6 +103,14 @@ export async function addVideoAction(
     return { error: "URL YouTube invalide. Collez l'URL complète." };
   }
 
+  // Cover image: a real File from <input type="file">. Required.
+  const coverFile = formData.get("coverFile");
+  if (!(coverFile instanceof File) || coverFile.size === 0) {
+    return { error: "Image de couverture requise" };
+  }
+  const upload = await uploadCover(userId, coverFile, format as VideoFormat);
+  if (!upload.ok) return { error: upload.error };
+
   const yearStr = String(formData.get("year") ?? "").trim();
   const yearNum = yearStr ? Number(yearStr) : undefined;
 
@@ -112,7 +121,7 @@ export async function addVideoAction(
     format: format as VideoFormat,
     title: String(formData.get("title") ?? "").trim(),
     youtubeId,
-    coverUrl: String(formData.get("coverUrl") ?? "").trim(),
+    coverUrl: upload.url,
     year: yearNum,
     description: String(formData.get("description") ?? "").trim(),
     tags: tags.length > 0 ? tags : undefined,

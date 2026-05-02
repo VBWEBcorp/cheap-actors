@@ -6,6 +6,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { backdropFor, posterFor, type Film } from "@/lib/catalog";
 import { YouTubePlayer } from "@/components/youtube-player";
+import { cn } from "@/lib/cn";
 
 type Props = {
   film: Film | null;
@@ -14,6 +15,9 @@ type Props = {
   onClose: () => void;
   /** Optional callback to swap the displayed film (used by similar-titles cards) */
   onSelectSimilar?: (film: Film) => void;
+  /** Skip the info screen and go directly to the YouTube player. Used by
+   *  shorts: their synopsis is already visible on hover, click = play. */
+  autoPlay?: boolean;
 };
 
 export function FilmModal({
@@ -22,8 +26,20 @@ export function FilmModal({
   rank,
   onClose,
   onSelectSimilar,
+  autoPlay = false,
 }: Props) {
   const [playing, setPlaying] = useState(false);
+
+  // Sync the playing state with the film+autoPlay combo:
+  // - autoPlay & a film opens : start in playing state
+  // - modal closes (no film)  : reset to info screen for next time
+  useEffect(() => {
+    if (film && autoPlay) {
+      setPlaying(true);
+    } else if (!film) {
+      setPlaying(false);
+    }
+  }, [film, autoPlay]);
 
   // Lock scroll & support ESC
   useEffect(() => {
@@ -31,7 +47,9 @@ export function FilmModal({
     document.body.style.overflow = "hidden";
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        if (playing) setPlaying(false);
+        // In autoPlay mode (shorts) ESC always closes — no info screen
+        // to return to.
+        if (playing && !autoPlay) setPlaying(false);
         else onClose();
       }
     };
@@ -40,7 +58,7 @@ export function FilmModal({
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = "";
     };
-  }, [film, playing, onClose]);
+  }, [film, playing, autoPlay, onClose]);
 
   return (
     <AnimatePresence>
@@ -70,8 +88,16 @@ export function FilmModal({
               <X className="h-4 w-4" />
             </button>
 
-            {/* Hero with image or player */}
-            <div className="relative aspect-video w-full overflow-hidden bg-ink">
+            {/* Hero with image or player. Vertical aspect for shorts so
+                the YouTube player renders correctly without letterboxing. */}
+            <div
+              className={cn(
+                "relative mx-auto w-full overflow-hidden bg-ink",
+                film.format === "short"
+                  ? "aspect-[9/16] max-w-[420px]"
+                  : "aspect-video",
+              )}
+            >
               {playing ? (
                 <YouTubePlayer
                   youtubeId={film.youtubeId}
@@ -82,16 +108,22 @@ export function FilmModal({
               ) : (
                 <>
                   <Image
-                    src={backdropFor(film)}
+                    src={
+                      film.format === "short"
+                        ? film.verticalPoster ?? backdropFor(film)
+                        : backdropFor(film)
+                    }
                     alt={film.title}
                     fill
                     priority
-                    sizes="100vw"
+                    sizes={
+                      film.format === "short" ? "420px" : "(max-width: 768px) 100vw, 800px"
+                    }
                     className="object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-paper via-paper/40 to-transparent" />
                   <div className="absolute inset-x-0 bottom-0 px-6 pb-6 md:px-10 md:pb-10">
-                    <h2 className="font-display font-black leading-[0.9] tracking-[-0.02em] text-[clamp(36px,6vw,72px)]">
+                    <h2 className="font-display font-black leading-[0.9] tracking-[-0.02em] text-[clamp(28px,6vw,72px)]">
                       {film.title}
                     </h2>
                     <div className="mt-5 flex flex-wrap items-center gap-2 md:gap-3">

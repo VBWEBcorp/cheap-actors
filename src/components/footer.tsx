@@ -30,14 +30,14 @@ export function Footer() {
         <div className="grid gap-10 md:grid-cols-12">
           <div className="md:col-span-7">
             <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-smoke">
-              ●  Cheap Actors — fr · 2026 →
+              ●  Cheap Actors · fr · 2026 →
             </p>
             <h3 className="mt-6 max-w-3xl font-display font-black leading-[0.95] tracking-tight text-[clamp(40px,8vw,96px)]">
               Vous filmez ? <br />
               <span className="italic font-medium">On regarde.</span>
             </h3>
             <p className="mt-4 max-w-md text-sm text-smoke">
-              On répond à tout. Même aux mauvais films — c'est notre cœur de métier.
+              On répond à tout. Même aux mauvais films, c'est notre cœur de métier.
             </p>
             <Link
               href="/soumettre"

@@ -44,7 +44,7 @@ export function Navbar({
     setDemoModalOpen(true);
   };
 
-  // Pill button styling — flips between mix-blend-paper (top of page) and ink-on-cream (scrolled)
+  // Pill button styling, flips between mix-blend-paper (top of page) and ink-on-cream (scrolled)
   const pillBase = scrolled
     ? "md:border md:border-ink/30 md:hover:border-ink md:hover:bg-ink md:hover:text-paper"
     : "md:border md:border-paper/30 md:hover:border-paper md:hover:bg-paper md:hover:text-ink";
@@ -171,7 +171,7 @@ export function Navbar({
         </div>
       </motion.header>
 
-      {/* Mobile drawer — outside the mix-blend-difference header */}
+      {/* Mobile drawer, outside the mix-blend-difference header */}
       <motion.div
         initial={false}
         animate={{

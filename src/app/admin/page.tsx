@@ -15,6 +15,11 @@ import { AccountControlCard } from "./account-control-card";
 
 export const dynamic = "force-dynamic";
 
+export const metadata = {
+  title: "Admin",
+  robots: { index: false, follow: false },
+};
+
 function serializeUser(u: UserDoc): UserModerationData {
   return {
     id: u._id.toString(),
@@ -34,8 +39,6 @@ function serializeUser(u: UserDoc): UserModerationData {
   };
 }
 
-export const metadata = { title: "Admin" };
-export const revalidate = 0;
 
 export default async function AdminPage() {
   let email: string | null | undefined;
@@ -140,7 +143,7 @@ export default async function AdminPage() {
           <section className="mt-16 md:mt-20">
             <header className="mb-6 flex items-end justify-between">
               <h2 className="font-display text-2xl font-bold tracking-tight md:text-3xl">
-                À valider — comptes
+                À valider · comptes
               </h2>
               <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-flame">
                 {String(pendingUsers.length).padStart(2, "0")} en attente
@@ -161,7 +164,7 @@ export default async function AdminPage() {
           <section className="mt-16 md:mt-20">
             <header className="mb-6 flex items-end justify-between">
               <h2 className="font-display text-2xl font-bold tracking-tight md:text-3xl">
-                À valider — vidéos
+                À valider · vidéos
               </h2>
               <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-flame">
                 {String(pendingVideos.length).padStart(2, "0")} en attente

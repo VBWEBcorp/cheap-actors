@@ -1,10 +1,29 @@
-import { getShorts } from "@/lib/catalog";
+import { getShorts, type Film } from "@/lib/catalog";
 import { ShortsBrowse } from "./shorts-browse";
 
 export const metadata = {
   title: "Shorts",
-  description: "Format vertical, format urgent.",
+  description:
+    "Courts au format vertical, une minute promis. Sélection humaine de shorts pour acteurs et réalisateurs indépendants. Hébergés sur YouTube, regardables d'un pouce.",
+  alternates: { canonical: "/shorts" },
+  openGraph: {
+    title: "Shorts · Cheap Actors",
+    description:
+      "Une minute. Pas plus. Souvent moins. Format vertical pour comédien·ne·s qu'aucun casting n'a rappelés.",
+    url: "/shorts",
+  },
 };
+
+/** Demo-only filler — duplicate the catalog so each row looks full. */
+function pad(items: Film[], target: number): Film[] {
+  if (items.length === 0) return [];
+  return Array.from({ length: target }, (_, i) => {
+    const src = items[i % items.length];
+    return { ...src, id: `${src.id}-${i}` };
+  });
+}
+
+const ROW_SIZE = 10;
 
 export default function ShortsPage() {
   const shorts = getShorts();
@@ -16,6 +35,8 @@ export default function ShortsPage() {
   const meta = shorts.filter((s) =>
     s.genres.some((g) => /méta|décalé|absurde/i.test(g)),
   );
+  const absurde = shorts.filter((s) => s.genres.includes("Absurde"));
+  const autoProduit = shorts.filter((s) => s.genres.includes("Auto-produit"));
 
   return (
     <ShortsBrowse
@@ -23,24 +44,38 @@ export default function ShortsPage() {
         {
           title: "À l'affiche",
           subtitle: "La sélection du moment",
-          films: shorts,
+          films: pad(shorts, ROW_SIZE),
         },
-        { title: "Top des plus vus", films: shorts, top: true },
+        {
+          title: "Top des plus vus",
+          films: pad(shorts, ROW_SIZE),
+          top: true,
+        },
         {
           title: "Récents",
           subtitle: `Sortis en ${recent[0]?.year ?? "2025"}`,
-          films: recent,
+          films: pad(recent, ROW_SIZE),
         },
         {
           title: "Drames",
           subtitle: "Pour pleurer en une minute",
-          films: dramas,
+          films: pad(dramas, ROW_SIZE),
         },
-        { title: "Comédies", films: comedies },
+        { title: "Comédies", films: pad(comedies, ROW_SIZE) },
         {
           title: "Méta & décalé",
           subtitle: "Quand le short se regarde lui-même",
-          films: meta,
+          films: pad(meta, ROW_SIZE),
+        },
+        {
+          title: "Absurde",
+          subtitle: "Pas tout à fait sérieux",
+          films: pad(absurde, ROW_SIZE),
+        },
+        {
+          title: "Auto-produits",
+          subtitle: "Filmés à la maison, ou presque",
+          films: pad(autoProduit, ROW_SIZE),
         },
       ].filter((r) => r.films.length > 0)}
     />

@@ -23,7 +23,7 @@ export const MAX_TAGS_PER_VIDEO = 4;
  * Mix of genres, moods and "context" tags adapted to amateur shorts.
  */
 export const TAGS = [
-  // — Genres
+  //, Genres
   "Drame",
   "Comédie",
   "Comédie dramatique",
@@ -38,14 +38,14 @@ export const TAGS = [
   "Fantastique",
   "Animation",
   "Musical",
-  // — Style / mood
+  //, Style / mood
   "Expérimental",
   "Méta",
   "Décalé",
   "Émouvant",
   "Absurde",
   "Huis-clos",
-  // — Contexte (perso au cinéma indé)
+  //, Contexte (perso au cinéma indé)
   "Premier film",
   "Sans budget",
   "Auto-produit",
@@ -60,7 +60,7 @@ export type Video = {
   title: string;
   youtubeId: string;
   /**
-   * Cover image URL chosen by the author — what's shown as the
+   * Cover image URL chosen by the author, what's shown as the
    * preview before the video is actually played. Required for new
    * submissions; older records may still rely on the YouTube
    * auto-thumbnail as a fallback.

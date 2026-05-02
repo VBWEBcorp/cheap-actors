@@ -252,7 +252,7 @@ function VideoControlRow({ userId, video }: { userId: string; video: Video }) {
           <VideoStatusPill status={video.status} />
         </div>
         <p className="mt-0.5 font-mono text-[9px] uppercase tracking-[0.22em] text-smoke">
-          {video.format} · {video.year ?? "—"} · {video.youtubeId}
+          {video.format} · {video.year ?? "·"} · {video.youtubeId}
         </p>
 
         <div className="mt-2 flex flex-wrap gap-1.5">

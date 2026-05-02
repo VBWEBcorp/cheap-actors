@@ -16,6 +16,7 @@ import { LogoutButton } from "./logout-button";
 export const metadata = {
   title: "Mon compte",
   description: "Modifiez votre fiche, gérez vos vidéos.",
+  robots: { index: false, follow: false },
 };
 
 export const dynamic = "force-dynamic";

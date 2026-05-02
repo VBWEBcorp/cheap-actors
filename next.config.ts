@@ -19,6 +19,7 @@ const nextConfig: NextConfig = {
     "mongodb-client-encryption",
     "socks",
     "bcryptjs",
+    "sharp",
   ],
   images: STATIC_EXPORT
     ? { unoptimized: true }
@@ -27,6 +28,8 @@ const nextConfig: NextConfig = {
           { protocol: "https", hostname: "img.youtube.com" },
           { protocol: "https", hostname: "i.ytimg.com" },
           { protocol: "https", hostname: "images.unsplash.com" },
+          { protocol: "https", hostname: "i.ibb.co" },
+          { protocol: "https", hostname: "pub-bef023bca8064ced91cd247b149c7f66.r2.dev" },
         ],
       },
   ...(STATIC_EXPORT
@@ -36,6 +39,10 @@ const nextConfig: NextConfig = {
         trailingSlash: true,
       }
     : {}),
+  experimental: {
+    // Cover uploads (R2) can reach up to 5MB; default is 1MB.
+    serverActions: { bodySizeLimit: "6mb" },
+  },
 };
 
 export default nextConfig;

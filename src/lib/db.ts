@@ -11,7 +11,7 @@ declare global {
  * Lazy-initialize the MongoDB client. We DON'T throw at module-load
  * because the build (and certain pages in DEMO_MODE) must succeed
  * even when MONGODB_URI isn't configured. Callers should be wrapped
- * in try/catch — see getAllPersonViews / getPersonViewBySlug.
+ * in try/catch, see getAllPersonViews / getPersonViewBySlug.
  */
 function getClientPromise(): Promise<MongoClient> {
   const uri = process.env.MONGODB_URI;

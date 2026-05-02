@@ -78,7 +78,7 @@ export async function getPersonViewBySlug(slug: string): Promise<PersonView | nu
     const dbUser = await getPublicUserBySlug(slug);
     if (dbUser) return publicUserToView(dbUser);
   } catch (err) {
-    // DB unreachable — fall through to static
+    // DB unreachable, fall through to static
     console.error("DB error in getPersonViewBySlug:", err);
   }
 

@@ -27,19 +27,56 @@ const mono = JetBrains_Mono({
   weight: ["400", "500"],
 });
 
+// Production URL is read from NEXT_PUBLIC_SITE_URL (set on Netlify), with a
+// localhost fallback for dev so og: links don't 404 when shared from a preview.
+const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Cheap Actors — un cinéma qui n'attendait personne",
+    default: "Cheap Actors · un cinéma qui n'attendait personne",
     template: "%s · Cheap Actors",
   },
   description:
-    "Une vitrine de courts-métrages et de formats verticaux pour acteurs qui méritent qu'on s'arrête.",
-  metadataBase: new URL("https://cheap-actors.com"),
+    "Vitrine de courts-métrages et de shorts joués par des acteurs qu'aucun casting n'a rappelés. Sélection humaine, hébergée sur YouTube. Pas connus. Pas chers. Pas mal.",
+  applicationName: "Cheap Actors",
+  authors: [{ name: "Cheap Actors" }],
+  keywords: [
+    "courts-métrages",
+    "court-métrage",
+    "acteurs indépendants",
+    "réalisateurs indépendants",
+    "cinéma indépendant",
+    "shorts",
+    "format vertical",
+    "casting",
+    "acteurs débutants",
+    "annuaire acteurs",
+    "vitrine cinéma",
+  ],
+  alternates: { canonical: "/" },
   openGraph: {
-    title: "Cheap Actors",
-    description: "Un cinéma qui n'attendait personne.",
+    title: "Cheap Actors · un cinéma qui n'attendait personne",
+    description:
+      "Des comédien·ne·s que personne n'a rappelés. Et — surprise — c'est plus intéressant que prévu.",
     type: "website",
+    locale: "fr_FR",
+    siteName: "Cheap Actors",
+    url: SITE_URL,
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "Cheap Actors",
+    description:
+      "Des comédien·ne·s que personne n'a rappelés. Et c'est plus intéressant que prévu.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large" },
+  },
+  category: "entertainment",
 };
 
 export const viewport: Viewport = {
@@ -54,7 +91,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   // Tolerate stale/corrupt auth cookies (common in dev when AUTH_SECRET changes
-  // or the port shifts) — render the layout without a session rather than 500.
+  // or the port shifts), render the layout without a session rather than 500.
   //
   // We also skip auth() during prerender (BUILD_STATIC for GH Pages, or
   // NEXT_PHASE=phase-production-build for any platform). auth() reads request

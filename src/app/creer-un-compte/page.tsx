@@ -4,6 +4,7 @@ import { RegisterForm } from "./register-form";
 export const metadata = {
   title: "Créer un compte",
   description: "Réservez votre fiche sur Cheap Actors. Trois lignes, on s'occupe du reste.",
+  robots: { index: false, follow: false },
 };
 
 export default function RegisterPage() {

@@ -22,10 +22,55 @@ export async function generateMetadata({
   const p = await getPersonViewBySlug(slug);
   if (!p) return {};
   const rolesLabel = p.roles.join(" · ");
+  const description =
+    p.tagline ||
+    `${p.name} — ${rolesLabel} sur Cheap Actors. ${p.bio ? p.bio.slice(0, 140) : "Une fiche, des courts-métrages, et zéro algorithme."}`;
   return {
-    title: `${p.name} — ${rolesLabel}`,
-    description: p.tagline || `${p.name}, ${rolesLabel}, sur Cheap Actors.`,
+    title: `${p.name} · ${rolesLabel}`,
+    description,
+    alternates: { canonical: `/acteurs/${slug}` },
+    openGraph: {
+      title: `${p.name} · ${rolesLabel}`,
+      description,
+      type: "profile",
+      url: `/acteurs/${slug}`,
+      images: p.photoUrl ? [{ url: p.photoUrl }] : undefined,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${p.name} · ${rolesLabel}`,
+      description,
+    },
   };
+}
+
+function PersonJsonLd({ person }: { person: PersonView }) {
+  const SITE_URL =
+    process.env.NEXT_PUBLIC_SITE_URL ?? "https://cheap-actors.com";
+  const data = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: person.name,
+    description: person.bio || person.tagline || undefined,
+    url: `${SITE_URL}/acteurs/${person.slug}`,
+    image: person.photoUrl || undefined,
+    jobTitle: person.roles.join(", "),
+    address: person.basedIn
+      ? {
+          "@type": "PostalAddress",
+          addressLocality: person.basedIn,
+          addressCountry: "FR",
+        }
+      : undefined,
+    birthDate: person.born ? `${person.born}` : undefined,
+    sameAs: undefined,
+  };
+  return (
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
+    />
+  );
 }
 
 export default async function PersonnePage({
@@ -50,6 +95,7 @@ export default async function PersonnePage({
 
   return (
     <article className="relative pb-24 pt-28 md:pt-32">
+      <PersonJsonLd person={person} />
       <div className="mx-auto max-w-[1800px] px-5 md:px-10">
         <Link
           href="/acteurs"
