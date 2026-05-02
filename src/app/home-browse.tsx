@@ -163,6 +163,7 @@ function HomeBrowseInner({ featured, rows, shorts }: Props) {
         similar={similar}
         onClose={close}
         onSelectSimilar={(f) => open(f)}
+        autoPlay={selected?.format === "short"}
       />
     </>
   );

@@ -1,18 +1,16 @@
 import "server-only";
 
 import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
-import sharp from "sharp";
 
 /**
  * Cloudflare R2 (S3-compatible) helper. Used to host user-uploaded
  * cover images for videos. The public URL is served via the bucket's
  * R2.dev development subdomain (or a custom domain in the future).
  *
- * All covers are re-encoded to WebP server-side (sharp) before upload:
- *   - Horizontal: max 1600 px wide
- *   - Vertical:   max 1080 px wide
- *   - Quality 80, mozjpeg-style chroma subsampling on WebP
- * A user dropping a 4 MB raw photo ends up shipping ~80 KB of WebP.
+ * Sharp is loaded lazily (dynamic import inside the upload function)
+ * so a missing or broken native binary on the deploy host does NOT
+ * crash module load and take down server-rendered pages with it.
+ * If sharp can't be loaded we just upload the original buffer.
  *
  * Required env vars:
  *   R2_ACCOUNT_ID            f993b4d539f1c05590e8e38d1f5f908d
@@ -62,26 +60,77 @@ export type UploadResult =
   | { ok: true; url: string; key: string }
   | { ok: false; error: string };
 
-/**
- * Compress + re-encode the buffer to WebP at a sensible max width
- * for the target format. Always rotates per EXIF and strips metadata
- * (faster, no privacy leak).
- */
-async function compressToWebp(
+type SharpFactory = (input?: Buffer) => {
+  rotate: () => ReturnType<SharpFactory>;
+  resize: (opts: { width: number; withoutEnlargement?: boolean }) => ReturnType<SharpFactory>;
+  webp: (opts: { quality?: number; effort?: number }) => ReturnType<SharpFactory>;
+  toBuffer: () => Promise<Buffer>;
+};
+let sharpLib: SharpFactory | null = null;
+let sharpAttempted = false;
+
+async function loadSharp(): Promise<SharpFactory | null> {
+  if (sharpAttempted) return sharpLib;
+  sharpAttempted = true;
+  try {
+    const mod = (await import("sharp")) as unknown as {
+      default: SharpFactory;
+    };
+    sharpLib = mod.default;
+    return sharpLib;
+  } catch (err) {
+    console.warn(
+      "[r2] sharp unavailable, uploading covers without compression:",
+      err,
+    );
+    return null;
+  }
+}
+
+type CompressedOutput = {
+  buffer: Buffer;
+  contentType: string;
+  ext: string;
+};
+
+/** Compress + re-encode to WebP if sharp is available, otherwise pass through. */
+async function compress(
   input: Buffer,
   format: CoverFormat,
-): Promise<Buffer> {
+  fallbackContentType: string,
+  fallbackExt: string,
+): Promise<CompressedOutput> {
+  const sharp = await loadSharp();
+  if (!sharp) {
+    return { buffer: input, contentType: fallbackContentType, ext: fallbackExt };
+  }
   const maxWidth = format === "horizontal" ? 1600 : 1080;
-  return sharp(input)
+  const buffer = await sharp(input)
     .rotate()
     .resize({ width: maxWidth, withoutEnlargement: true })
     .webp({ quality: 80, effort: 4 })
     .toBuffer();
+  return { buffer, contentType: "image/webp", ext: "webp" };
+}
+
+function fallbackExtFromMime(mime: string): string {
+  switch (mime) {
+    case "image/jpeg":
+      return "jpg";
+    case "image/png":
+      return "png";
+    case "image/webp":
+      return "webp";
+    case "image/avif":
+      return "avif";
+    default:
+      return "bin";
+  }
 }
 
 /**
- * Upload a video cover to R2 under covers/<userId>/<random>.webp
- * (always WebP after compression) and return its public URL.
+ * Upload a video cover to R2 under covers/<userId>/<random>.<ext>
+ * and return its public URL.
  */
 export async function uploadCover(
   userId: string,
@@ -100,17 +149,22 @@ export async function uploadCover(
 
   try {
     const raw = Buffer.from(await file.arrayBuffer());
-    const optimized = await compressToWebp(raw, format);
+    const out = await compress(
+      raw,
+      format,
+      file.type,
+      fallbackExtFromMime(file.type),
+    );
 
     const random = Math.random().toString(36).slice(2, 10);
-    const key = `covers/${userId}/${Date.now()}-${random}.webp`;
+    const key = `covers/${userId}/${Date.now()}-${random}.${out.ext}`;
 
     await getClient().send(
       new PutObjectCommand({
         Bucket: R2_BUCKET,
         Key: key,
-        Body: optimized,
-        ContentType: "image/webp",
+        Body: out.buffer,
+        ContentType: out.contentType,
         CacheControl: "public, max-age=31536000, immutable",
       }),
     );
