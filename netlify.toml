@@ -1,0 +1,18 @@
+# Production build : Next.js full (server actions, middleware,
+# /api/auth, mon-compte, admin, MongoDB, Auth.js v5).
+# Le plugin officiel @netlify/plugin-nextjs gère le déploiement
+# du runtime — pas besoin d'output:'export'.
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  # Auth.js v5 hors Vercel : sans cette variable, NextAuth refuse
+  # les requêtes parce qu'il ne fait pas confiance au proxy.
+  AUTH_TRUST_HOST = "true"
+  # Node moderne pour matcher next 15
+  NODE_VERSION = "20"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
