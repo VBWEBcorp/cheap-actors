@@ -29,11 +29,26 @@ const mono = JetBrains_Mono({
 
 // Production URL is read from NEXT_PUBLIC_SITE_URL (set on Netlify), with a
 // localhost fallback for dev so og: links don't 404 when shared from a preview.
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+// We auto-add https:// if missing and fall back gracefully if the env var is
+// malformed — Netlify silently strips values it can't parse and `new URL()`
+// would otherwise crash the entire build at "collect page data".
+function resolveSiteUrl(): URL {
+  const raw = (process.env.NEXT_PUBLIC_SITE_URL ?? "").trim();
+  const fallback = new URL("http://localhost:3000");
+  if (!raw) return fallback;
+  const candidate = /^https?:\/\//i.test(raw) ? raw : `https://${raw}`;
+  try {
+    return new URL(candidate);
+  } catch {
+    return fallback;
+  }
+}
+
+const SITE_URL_OBJ = resolveSiteUrl();
+const SITE_URL = SITE_URL_OBJ.toString().replace(/\/$/, "");
 
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_URL),
+  metadataBase: SITE_URL_OBJ,
   title: {
     default: "Cheap Actors · un cinéma qui n'attendait personne",
     template: "%s · Cheap Actors",
