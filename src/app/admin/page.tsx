@@ -13,6 +13,8 @@ import { UserModerationCard } from "./user-moderation-card";
 import { VideoModerationCard } from "./video-moderation-card";
 import { AccountControlCard } from "./account-control-card";
 
+export const dynamic = "force-dynamic";
+
 function serializeUser(u: UserDoc): UserModerationData {
   return {
     id: u._id.toString(),

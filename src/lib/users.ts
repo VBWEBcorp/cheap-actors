@@ -245,6 +245,12 @@ export async function createUser(
   const passwordHash = await bcrypt.hash(data.password, 10);
   const now = new Date();
 
+  // Super admins (listed in SUPER_ADMIN_EMAILS) get auto-approved on signup
+  // — chicken-and-egg otherwise: nobody could moderate the very first account.
+  const initialStatus: ModerationStatus = isSuperAdmin(email)
+    ? "approved"
+    : "pending";
+
   const doc: Omit<UserDoc, "_id"> = {
     email,
     passwordHash,
@@ -254,9 +260,10 @@ export async function createUser(
     tagline: "",
     bio: "",
     videos: [],
-    status: "pending",
+    status: initialStatus,
     createdAt: now,
     updatedAt: now,
+    reviewedAt: initialStatus === "approved" ? now : undefined,
   };
 
   const col = await usersCollection();

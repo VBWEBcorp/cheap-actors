@@ -4,17 +4,14 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { getPersonViewBySlug, type PersonView } from "@/lib/person-view";
-import { people, posterFor } from "@/lib/catalog";
+import { posterFor } from "@/lib/catalog";
 import { PersonAvatar } from "@/components/person-avatar";
 import { PersonVideoPlayer } from "./video-player";
 import { ShareCard } from "./share-card";
 
-
-/** Pre-render the full static catalog at build time. DB users are
- * still served on demand at runtime (fine when not in static export). */
-export async function generateStaticParams() {
-  return people.map((p) => ({ slug: p.slug }));
-}
+// Always render server-side: fiches mixent catalogue statique + comptes
+// DB approuvés. Pas de pré-rendu au build (sinon MONGODB_URI requis).
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,

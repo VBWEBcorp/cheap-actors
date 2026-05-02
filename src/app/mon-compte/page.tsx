@@ -18,6 +18,8 @@ export const metadata = {
   description: "Modifiez votre fiche, gérez vos vidéos.",
 };
 
+export const dynamic = "force-dynamic";
+
 function StatusPill({
   status,
   isDemo,

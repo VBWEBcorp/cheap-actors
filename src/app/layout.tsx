@@ -55,12 +55,19 @@ export default async function RootLayout({
 }) {
   // Tolerate stale/corrupt auth cookies (common in dev when AUTH_SECRET changes
   // or the port shifts) — render the layout without a session rather than 500.
-  // In static export builds we skip auth() altogether: it reads request
-  // headers, which Next.js refuses to do during prerender.
+  //
+  // We also skip auth() during prerender (BUILD_STATIC for GH Pages, or
+  // NEXT_PHASE=phase-production-build for any platform). auth() reads request
+  // headers and triggers a dynamic-server-usage bailout that fails the build
+  // when the page would otherwise have been static. At runtime auth() is
+  // still called normally, so the navbar reflects the real session.
   let sessionEmail: string | null | undefined;
   let sessionName: string | null | undefined;
   let hasSession = false;
-  if (process.env.BUILD_STATIC !== "1") {
+  const isBuildPhase =
+    process.env.BUILD_STATIC === "1" ||
+    process.env.NEXT_PHASE === "phase-production-build";
+  if (!isBuildPhase) {
     try {
       const session = await auth();
       sessionEmail = session?.user?.email;

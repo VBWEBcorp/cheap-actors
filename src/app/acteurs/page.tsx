@@ -9,6 +9,10 @@ export const metadata = {
     "Catalogue d'acteurs et de réalisateurs. Filtrez, regardez, contactez.",
 };
 
+// Always render server-side at request time (fresh DB data + no static
+// pre-render that would need MONGODB_URI at build time).
+export const dynamic = "force-dynamic";
+
 
 export default async function ActeursPage() {
   const { dbUsers, staticPeople } = await getAllPersonViews();
