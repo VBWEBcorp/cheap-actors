@@ -10,16 +10,19 @@ export function Footer() {
           <div className="grid gap-6 md:grid-cols-12 md:items-end">
             <div className="md:col-span-4">
               <p className="font-mono text-[10px] uppercase tracking-[0.28em] text-smoke">
-                ●  Sélection en cours
+                ●  État du tri
               </p>
               <h4 className="mt-2 font-display text-2xl font-bold leading-tight tracking-tight md:text-3xl">
-                C'est <span className="italic">tendu.</span>
+                On garde peu.{" "}
+                <span className="italic">Mais poliment.</span>
               </h4>
             </div>
             <div className="md:col-span-8">
               <SubmissionStats variant="expanded" />
               <p className="mt-4 font-mono text-[9px] tracking-tight text-smoke">
-                * chiffres approximatifs, comme tout sur ce site.
+                * chiffres approximatifs. Le taux d'acceptation a été arrondi
+                à la hausse, pour que ça paraisse moins déprimant côté
+                soumissionnaires.
               </p>
             </div>
           </div>

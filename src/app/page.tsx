@@ -98,10 +98,14 @@ export default function HomePage() {
             </p>
             <div className="md:col-span-9">
               <p className="font-display leading-[1.15] tracking-tight text-[clamp(24px,4.2vw,64px)]">
-                Cheap Actors est une <span className="italic font-medium">vitrine</span>.
-                Pour ceux qui n'ont pas eu de chance, qui n'ont pas eu de relations,
-                ou qui n'avaient juste pas le bon nom. Pas connus. Pas chers.
-                <span className="text-flame"> Pas mal.</span>
+                L'industrie regarde toujours{" "}
+                <span className="italic">les mêmes</span>. Nous,{" "}
+                <span className="italic font-medium">les autres</span>.
+                Comédiens jamais signés, réalisateurs jamais lus, films qui ne
+                ressemblent pas aux trois autres.{" "}
+                <span className="text-flame">
+                  Ce qui reste quand personne n'a cherché.
+                </span>
               </p>
               <Link
                 href="/manifeste"
