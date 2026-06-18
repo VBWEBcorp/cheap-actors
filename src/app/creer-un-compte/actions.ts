@@ -2,7 +2,14 @@
 
 import { redirect } from "next/navigation";
 import { signIn } from "@/auth";
-import { createUser, ROLES, type Role } from "@/lib/users";
+import {
+  createUser,
+  getSuperAdminEmails,
+  isSuperAdmin,
+  ROLES,
+  type Role,
+} from "@/lib/users";
+import { notifyAdminsNewSignup, sendWelcomeEmail } from "@/lib/email";
 
 export type RegisterState = {
   error?: string;
@@ -40,6 +47,18 @@ export async function registerAction(
   });
   if (!result.ok) {
     return { error: result.error, values };
+  }
+
+  // Emails (best-effort : ne bloquent jamais l'inscription, ne lèvent jamais).
+  const pending = !isSuperAdmin(email);
+  await sendWelcomeEmail(email, displayName, pending);
+  if (pending) {
+    await notifyAdminsNewSignup({
+      displayName,
+      email,
+      roles,
+      adminEmails: getSuperAdminEmails(),
+    });
   }
 
   // Auto-login after register

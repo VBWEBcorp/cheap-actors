@@ -11,6 +11,7 @@ import {
   setVideoStatus,
   type ModerationStatus,
 } from "@/lib/users";
+import { sendModerationEmail } from "@/lib/email";
 import { DEMO_MODE } from "@/lib/demo";
 
 async function requireAdmin(): Promise<void> {
@@ -42,7 +43,19 @@ export async function moderateUserAction(formData: FormData): Promise<void> {
   revalidatePath("/admin");
   revalidatePath("/acteurs");
   const u = await getUserById(userId);
-  if (u) revalidatePath(`/acteurs/${u.slug}`);
+  if (u) {
+    revalidatePath(`/acteurs/${u.slug}`);
+    // Email best-effort à l'acteur (jamais bloquant).
+    if (status === "approved" || status === "rejected" || status === "suspended") {
+      await sendModerationEmail({
+        to: u.email,
+        displayName: u.displayName,
+        status,
+        slug: u.slug,
+        reason: reason || undefined,
+      });
+    }
+  }
 }
 
 export async function deleteUserAction(formData: FormData): Promise<void> {

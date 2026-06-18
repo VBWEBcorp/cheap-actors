@@ -373,15 +373,18 @@ export async function addVideo(
  * =========================================================
  */
 
-/** Whether the given email is the super-admin (env var SUPER_ADMIN_EMAILS, comma-separated). */
-export function isSuperAdmin(email: string | null | undefined): boolean {
-  if (!email) return false;
-  const raw = process.env.SUPER_ADMIN_EMAILS ?? "";
-  const list = raw
+/** Liste des emails super-admin (env var SUPER_ADMIN_EMAILS, séparés par des virgules). */
+export function getSuperAdminEmails(): string[] {
+  return (process.env.SUPER_ADMIN_EMAILS ?? "")
     .split(",")
     .map((s) => s.trim().toLowerCase())
     .filter(Boolean);
-  return list.includes(email.toLowerCase());
+}
+
+/** Whether the given email is the super-admin (env var SUPER_ADMIN_EMAILS, comma-separated). */
+export function isSuperAdmin(email: string | null | undefined): boolean {
+  if (!email) return false;
+  return getSuperAdminEmails().includes(email.toLowerCase());
 }
 
 export async function getAllUsersAdmin(): Promise<UserDoc[]> {
