@@ -2,7 +2,11 @@ node_modules
 .next
 out
 .static-stash
-.env*.local
+# env (contiennent des secrets — ne JAMAIS committer)
+.env*
+!.env.example
+# logs locaux
+*.log
 .DS_Store
 *.tsbuildinfo
 next-env.d.ts
